@@ -1,3 +1,3 @@
 public class jaj {
-    System.out.println("salu2");
+    System.out.println("Juan aprende a utilizar el GitHub");
 }
