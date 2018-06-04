@@ -61,7 +61,7 @@ public class Asignatura {
 		return this.nHoras;
 	}
 	
-	public addExamen(Examen e) {
+	public void addExamen(Examen e) {
 		examenes.add(e);
 	}
 }
