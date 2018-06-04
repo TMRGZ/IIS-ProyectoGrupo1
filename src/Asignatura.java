@@ -1,3 +1,5 @@
+import java.util.Date;
+import java.util.List;
 
 public class Asignatura {
 	
@@ -6,13 +8,15 @@ public class Asignatura {
 	private int Dificultad;
 	private int nHoras;
 	private int Valoracion;
+	private List<Examen> examenes;
 	
-	public Asignatura(String nombre, int id, int Dificultad, int nHoras, int Valoracion) {
+	public Asignatura(String nombre, int id, int Dificultad, int nHoras, int Valoracion, List<Examen> examenes) {
 		this.nombre = nombre;
 		this.id = id;
 		this.Dificultad = Dificultad;
 		this.nHoras = nHoras;
 		this.Valoracion = Valoracion;
+		this.examenes = examenes;
 	}
 	
 	public void calcularDificultad(int dificultadesbase[]) {
@@ -39,5 +43,13 @@ public class Asignatura {
 		}
 		factor = (1-Math.abs(Nota-Math.pow(factor, 1/notas.length))/10);
 		return (int) ((10 - Nota)*0.5 + Valoracion*0.5*factor);
+	}
+	
+	public boolean hayExamen(Date hoy) {
+		boolean hay = false;
+		for(Examen e : examenes) {
+			if(e.getFecha().getTime()-hoy.getTime() <= 28) hay = true;
+		}
+		return hay;
 	}
 }
