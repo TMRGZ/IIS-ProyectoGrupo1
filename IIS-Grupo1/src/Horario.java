@@ -127,13 +127,14 @@ public class Horario {
 	
 	public void mostrarTrama() {
 		for(TramaHoraria t : tramas) {
-			System.out.println(t.getHoraInicio());
 			System.out.println(t.getAsignatura().getNombre());
+			System.out.println("Día:  " + t.getDia() + " " + t.getHoraInicio());
+			
 		}
 	}
 	public void mostrarHoras() {
 		for(Asignatura t : asignatura) {
-			System.out.println(t.getHoras());
+			System.out.println(t.getNombre() + ": " + t.getHoras());
 		
 		}
 	}

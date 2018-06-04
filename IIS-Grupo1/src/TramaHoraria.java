@@ -18,6 +18,10 @@ public class TramaHoraria {
 		return this.asg;
 	}
 	
+	public int getDia() {
+		return this.Dia;
+	}
+	
 	public void setAsignatura(Asignatura asg) {
 		this.asg = asg;
 	}
