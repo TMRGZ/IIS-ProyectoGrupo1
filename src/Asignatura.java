@@ -52,4 +52,8 @@ public class Asignatura {
 		}
 		return hay;
 	}
+	
+	public void setHoras(int h) {
+		this.nHoras = h;
+	}
 }
