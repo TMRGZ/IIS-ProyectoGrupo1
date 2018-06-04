@@ -20,6 +20,7 @@ public class Horario {
 	
 	public List<TramaHoraria> tramas = new ArrayList<>();
 	public List<Asignatura> asignatura = new ArrayList<>();
+	
 	public Horario(Date inicio, Date fin, List<Asignatura> asignatura) {
 		this.inicio = inicio;
 		this.fin = inicio;
@@ -35,9 +36,10 @@ public class Horario {
 	public void repartirTramas(Map<Integer, List<Pair<Double, Double>>> dia) {
 		
 		for(Integer d : dia.keySet()) {
+			
 			for(Pair<Double, Double> p : dia.get(d)) {
-				double inic = p.getKey();
-				double fin = p.getValue();
+				Double inic = p.getKey();
+				Double fin = p.getValue();
 				while(inic < fin) {
 					TramaHoraria tr = new TramaHoraria(inic, d);
 					tramas.add(tr);
@@ -63,11 +65,40 @@ public class Horario {
 		int ctramas = 0;
 		int casig = 0;
 		int tramasA = 0;
+		Asignatura asg;
 		while(tramasA < horasLibres()) {
-			while(cont < 2 && asignatura.get(casig).getHoras() > 0) {
-				tramas.get(ctramas).as
-				
+			asg = asignatura.get(casig);
+			cont = 0;
+			while(cont < 2 && asg.getHoras() > 0) {
+				tramas.get(ctramas).setAsignatura(asg);
+				cont++;
+				ctramas++;
+				tramasA++;
+				asg.setHoras(asg.getHoras()-1);
 			}
+			
+			if(todasAsig() && tramasA < horasLibres()) {
+				if(asignatura.get(0).compareTo(asg) != 0) cont = 0;
+				casig = 0;
+				
+				while(tramasA < horasLibres()) {
+					
+					asg = asignatura.get(casig);
+					tramas.get(ctramas).setAsignatura(asg);
+					cont++;
+					if(cont == 2) {
+						casig = (casig + 1) % asignatura.size();
+							
+					}
+					ctramas++;
+					tramasA++;
+				}
+			}
+			
+			casig = (casig + 1) % asignatura.size();
+			
+			
+			
 			
 		}
 	}
@@ -76,11 +107,34 @@ public class Horario {
 		return tramas.size();
 	}
 	
+	private boolean todasAsig() { //Falso cuando no estan todas asignadas
+		int i = 0;
+		while(i < asignatura.size() && asignatura.get(i).getHoras() == 0) i++;
+		return i == asignatura.size();
+	}
+	
 	private int totalDificultad() {
 		int n = 0;
 		for(Asignatura a: asignatura) {
 			n = n + a.getDificultad();
 		}
 		return n;
+	}
+	
+	public void setAsignatura(List<Asignatura> asignatura) {
+		this.asignatura = asignatura;	
+	}
+	
+	public void mostrarTrama() {
+		for(TramaHoraria t : tramas) {
+			System.out.println(t.getHoraInicio());
+			System.out.println(t.getAsignatura().getNombre());
+		}
+	}
+	public void mostrarHoras() {
+		for(Asignatura t : asignatura) {
+			System.out.println(t.getHoras());
+		
+		}
 	}
 }

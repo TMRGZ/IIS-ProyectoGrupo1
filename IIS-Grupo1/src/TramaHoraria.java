@@ -14,6 +14,10 @@ public class TramaHoraria {
 		return HoraInicio;
 	}
 	
+	public Asignatura getAsignatura() {
+		return this.asg;
+	}
+	
 	public void setAsignatura(Asignatura asg) {
 		this.asg = asg;
 	}
