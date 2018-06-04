@@ -56,4 +56,12 @@ public class Asignatura {
 	public void setHoras(int h) {
 		this.nHoras = h;
 	}
+	
+	public int getHoras() {
+		return this.nHoras;
+	}
+	
+	public addExamen(Examen e) {
+		examenes.add(e);
+	}
 }
