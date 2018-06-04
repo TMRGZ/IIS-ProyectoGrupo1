@@ -1,0 +1,62 @@
+
+public class Asignatura implements Comparable<Asignatura>{
+	private String nombre;
+	private int id;
+	private int Dificultad;
+	private int nHoras;
+	private int Valoracion;
+	
+	public Asignatura(String nombre, int id, int Dificultad, int nHoras, int Valoracion) {
+		this.nombre = nombre;
+		this.id = id;
+		this.Dificultad = Dificultad;
+		this.nHoras = nHoras;
+		this.Valoracion = Valoracion;
+	}
+	
+	public void calcularDificultad(int dificultadesbase[]) {
+		int aux = 1;
+		for(int i = 0; i < dificultadesbase.length; i++) {
+			aux *= dificultadesbase[i];
+		}
+		Dificultad = (int) Math.pow(aux, 1/dificultadesbase.length);
+		
+	}
+	
+	public String getNombre() {
+		return this.nombre;
+	}
+	
+	public int getDificultad() {
+		return this.Dificultad;
+	}
+	
+	public int getHoras() {
+		return this.nHoras;
+	}
+	
+	public void setHoras(int h) {
+		this.nHoras = h;
+	}
+	
+	public int CalcularDifBase(int Nota, int notas[]) {
+		double factor = 1;
+		for(int i = 0; i < notas.length; i++) {
+			factor *= notas[i];
+		}
+		factor = (1-Math.abs(Nota-Math.pow(factor, 1/notas.length))/10);
+		return (int) ((10 - Nota)*0.5 + Valoracion*0.5*factor);
+	}
+
+	@Override
+	public int compareTo(Asignatura a) {
+		if (Dificultad < a.Dificultad) {
+            return -1;
+        }
+        if (Dificultad > a.Dificultad) {
+            return 1;
+        }
+        return 0;
+		
+	}
+}
