@@ -1,24 +1,29 @@
+import javafx.util.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.*;
 
 
 public class HorarioTest {
     private Horario h;
     private Alumno a;
-    List<Examen> examenes = new ArrayList<>();
-    Asignatura a1 = new Asignatura("Calculo", 1, 6, 0, 0, examenes);
-    Asignatura a2 = new Asignatura("Discretas", 2, 7, 0, 0, examenes);
-    Asignatura a3 = new Asignatura("Redes", 3, 9, 0, 0, examenes);
+    private List<Examen> examenes = new ArrayList<>();
+    private Asignatura a1 = new Asignatura("Calculo", 1, 6, 0, 0, examenes);
+    private Asignatura a2 = new Asignatura("Discretas", 2, 7, 0, 0, examenes);
+    private Asignatura a3 = new Asignatura("Redes", 3, 9, 0, 0, examenes);
     private List<Asignatura> listaAsignaturas = new ArrayList<>();
     private Date fechaInicio = new Date(4, 4, 4);
+    private Date fechaFin = new Date(5, 5, 5);
+    private Map<Integer, List<Pair<Double, Double>>> dia = new HashMap<>();
+    private List<Pair<Double, Double>> l = new ArrayList<>();
+    private List<Pair<Double, Double>> l2 = new ArrayList<>();
+    private Pair<Double, Double> p1;
+    private Pair<Double, Double> p2;
 
 
     @Before
@@ -27,8 +32,10 @@ public class HorarioTest {
         listaAsignaturas.add(a2);
         listaAsignaturas.add(a3);
 
-        h = new Horario(fechaInicio, fechaInicio, listaAsignaturas);
+        h = new Horario(fechaInicio, fechaFin, listaAsignaturas);
         a = mock(Alumno.class);
+        p1 = new Pair<>(12d, 14d);
+        p2 = new Pair<>(16d, 20d);
     }
 
 
@@ -41,14 +48,42 @@ public class HorarioTest {
     @Test
     public void horarioTieneAsignaturasDeAlumno() {
         when(a.getAsignaturas()).thenReturn(listaAsignaturas);
+        assertEquals(a.getAsignaturas(), h.asignatura);
+        verify(a).getAsignaturas();
+    }
 
+    @Test
+    public void tramasRepartidasVacias() {
+        l.add(p1);
+        l2.add(p2);
+        dia.put(0, l);
+        dia.put(1, l2);
+
+        h.repartirTramas(dia);
+
+        for (TramaHoraria th : h.getTramas()) {
+            assertNull(th.getAsignatura());
+        }
 
     }
 
     @Test
-    public void tramaAsociaAsignaturas() {
+    public void asignturaBienAñadidaEnHorario() {
+        l.add(p1);
+        l2.add(p2);
+        dia.put(0, l);
+        dia.put(1, l2);
 
+        h.repartirTramas(dia);
+        h.asignacionAsigTrama();
+
+        assertEquals(h.getTramas().get(0).getAsignatura(), a3);
+        assertEquals(h.getTramas().get(2).getAsignatura(), a2);
     }
 
+    @Test(expected = HorarioException.class)
+    public void errorSiDuracionInvalida() {
+        h = new Horario(fechaInicio, fechaInicio, listaAsignaturas);
+    }
 
 }

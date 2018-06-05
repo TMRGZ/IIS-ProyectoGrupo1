@@ -6,7 +6,6 @@ public class Principal {
 
 	public static void main(String[] args) {
 
-		List<TramaHoraria> tramas = new ArrayList<>();
 		List<Asignatura> asig = new ArrayList<>();
 		Date a = new Date(4, 4, 4);
 		Date b = new Date(5, 5, 5);
@@ -15,8 +14,6 @@ public class Principal {
 		Asignatura a1 = new Asignatura("Calculo", 1, 6, 0, 0, examenes);
 		Asignatura a2 = new Asignatura("Discretas", 2, 7, 0, 0, examenes);
 		Asignatura a3 = new Asignatura("Redes", 3, 9, 0, 0, examenes);
-
-
 		asig.add(a1);
 		asig.add(a2);
 		asig.add(a3);
@@ -27,8 +24,8 @@ public class Principal {
 		List<Pair<Double, Double>> l = new ArrayList<>();
 		List<Pair<Double, Double>> l2 = new ArrayList<>();
 
-		Pair<Double, Double> p1 = new Pair(new Double(12), new Double(14));
-		Pair<Double, Double> p2 = new Pair(new Double(16), new Double(20));
+		Pair<Double, Double> p1 = new Pair<>(12d, 14d);
+		Pair<Double, Double> p2 = new Pair<>(16d, 20d);
 		l.add(p1);
 		l2.add(p2);
 		dia.put(0, l);
@@ -41,7 +38,5 @@ public class Principal {
 		h.asignacionAsigTrama();
 		h.mostrarTrama();
 
-
 	}
-
 }

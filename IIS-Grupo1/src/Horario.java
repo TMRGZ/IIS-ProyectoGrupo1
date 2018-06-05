@@ -4,24 +4,25 @@ import java.util.*;
 
 
 public class Horario {
-
     public Date inicio;
     public Date fin;
-
-
     public List<TramaHoraria> tramas = new ArrayList<>();
-    public List<Asignatura> asignatura = new ArrayList<>();
+    public List<Asignatura> asignatura;
 
     public Horario(Date inicio, Date fin, List<Asignatura> asignatura) {
-        this.inicio = inicio;
-        this.fin = inicio;
-        Collections.sort(asignatura, new Comparator<Asignatura>() {
-            public int compare(Asignatura a1, Asignatura a2) {
-                return new Integer(a1.getDificultad()).compareTo(new Integer(a2.getDificultad()));
-            }
-        });
-        Collections.reverse(asignatura);
-        this.asignatura = asignatura;
+        if (inicio.getMonth() >= fin.getMonth() && inicio.getYear() >= fin.getYear() && fin.getDay() - inicio.getDay() < 7) {
+            throw new HorarioException("No se puede crear horario de menos de una semana");
+        } else {
+            this.inicio = inicio;
+            this.fin = inicio;
+            asignatura.sort(new Comparator<>() {
+                public int compare(Asignatura a1, Asignatura a2) {
+                    return Integer.compare(a1.getDificultad(), a2.getDificultad());
+                }
+            });
+            Collections.reverse(asignatura);
+            this.asignatura = asignatura;
+        }
     }
 
     public void repartirTramas(Map<Integer, List<Pair<Double, Double>>> dia) {
@@ -29,6 +30,7 @@ public class Horario {
             for (Pair<Double, Double> p : dia.get(d)) {
                 Double inic = p.getKey();
                 Double fin = p.getValue();
+
                 while (inic < fin) {
                     TramaHoraria tr = new TramaHoraria(inic, d);
                     tramas.add(tr);
@@ -54,6 +56,7 @@ public class Horario {
         int casig = 0;
         int tramasA = 0;
         Asignatura asg;
+
         while (tramasA < horasLibres()) {
             asg = asignatura.get(casig);
             cont = 0;
@@ -70,10 +73,10 @@ public class Horario {
                 casig = 0;
 
                 while (tramasA < horasLibres()) {
-
                     asg = asignatura.get(casig);
                     tramas.get(ctramas).setAsignatura(asg);
                     cont++;
+
                     if (cont == 2) {
                         casig = (casig + 1) % asignatura.size();
 
