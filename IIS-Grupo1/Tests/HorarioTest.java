@@ -7,15 +7,16 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class HorarioTest {
     private Horario h;
-    private TramaHoraria th;
-    private Asignatura a1 = new Asignatura("A1", 1, 1, 5, 0);
-    private Asignatura a2 = new Asignatura("A2", 2, 2, 6, 0);
-    private Asignatura a3 = new Asignatura("A3", 3, 3, 7, 0);
+    private Alumno a;
+    List<Examen> examenes = new ArrayList<>();
+    Asignatura a1 = new Asignatura("Calculo", 1, 6, 0, 0, examenes);
+    Asignatura a2 = new Asignatura("Discretas", 2, 7, 0, 0, examenes);
+    Asignatura a3 = new Asignatura("Redes", 3, 9, 0, 0, examenes);
     private List<Asignatura> listaAsignaturas = new ArrayList<>();
     private Date fechaInicio = new Date(4, 4, 4);
 
@@ -26,27 +27,27 @@ public class HorarioTest {
         listaAsignaturas.add(a2);
         listaAsignaturas.add(a3);
 
-        h = new Horario(fechaInicio, listaAsignaturas);
-        th = mock(TramaHoraria.class);
+        h = new Horario(fechaInicio, fechaInicio, listaAsignaturas);
+        a = mock(Alumno.class);
     }
 
 
     @Test
-    public void constructorCreaVacio() { // Incicializa sin tramas ni examenes
+    public void constructorCreaBien() { // Incicializa sin tramas pero con asig
         assertEquals(0, h.getTramas().size());
-        assertEquals(0, h.getExamenes().size());
+        assertEquals(listaAsignaturas.size(), h.getAsignatura().size());
     }
 
     @Test
-    public void insertaTramaBien() {
-        int nTramasAnterior = h.getTramas().size();
+    public void horarioTieneAsignaturasDeAlumno() {
+        when(a.getAsignaturas()).thenReturn(listaAsignaturas);
 
 
     }
 
     @Test
     public void tramaAsociaAsignaturas() {
-        verify(th).setAsignatura(a1);
+
     }
 
 

@@ -1,3 +1,5 @@
+import java.util.Date;
+import java.util.List;
 
 public class Asignatura implements Comparable<Asignatura> {
     private String nombre;
@@ -5,13 +7,15 @@ public class Asignatura implements Comparable<Asignatura> {
     private int Dificultad;
     private int nHoras;
     private int Valoracion;
+    private List<Examen> examenes;
 
-    public Asignatura(String nombre, int id, int Dificultad, int nHoras, int Valoracion) {
+    public Asignatura(String nombre, int id, int Dificultad, int nHoras, int Valoracion, List<Examen> examenes) {
         this.nombre = nombre;
         this.id = id;
         this.Dificultad = Dificultad;
         this.nHoras = nHoras;
         this.Valoracion = Valoracion;
+        this.examenes = examenes;
     }
 
     public void calcularDificultad(int dificultadesbase[]) {
@@ -58,5 +62,17 @@ public class Asignatura implements Comparable<Asignatura> {
         }
         return 0;
 
+    }
+
+    public void addExamen(Examen e) {
+        examenes.add(e);
+    }
+
+    public boolean hayExamen(Date hoy) {
+        boolean hay = false;
+        for (Examen e : examenes) {
+            if (e.getFecha().getTime() - hoy.getTime() <= 28) hay = true;
+        }
+        return hay;
     }
 }
