@@ -114,7 +114,7 @@ public class Horario {
     public void mostrarTrama() {
         for (TramaHoraria t : tramas) {
             System.out.println(t.getAsignatura().getNombre());
-            System.out.println("D�a:  " + t.getDia() + " " + t.getHoraInicio());
+            System.out.println("Dia:  " + t.getDia() + " " + t.getHoraInicio());
         }
     }
 
