@@ -2,6 +2,7 @@ import javafx.util.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -10,7 +11,6 @@ import static org.mockito.Mockito.*;
 
 
 public class HorarioTest {
-    private Horario h;
     private Alumno a;
     private List<Examen> examenes = new ArrayList<>();
     private Asignatura a1 = new Asignatura("Calculo", 1, 6, 0, 0, examenes);
@@ -32,21 +32,31 @@ public class HorarioTest {
         listaAsignaturas.add(a2);
         listaAsignaturas.add(a3);
 
-        h = new Horario(fechaInicio, fechaFin, listaAsignaturas);
         a = mock(Alumno.class);
         p1 = new Pair<>(12d, 14d);
         p2 = new Pair<>(16d, 20d);
     }
 
+    @Before
+    public void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
+        Field HorarioUnico = Horario.class.getDeclaredField("HorarioUnico");
+        HorarioUnico.setAccessible(true);
+        HorarioUnico.set(null, null);
+    }
+
 
     @Test
     public void constructorCreaBien() { // Incicializa sin tramas pero con asig
+        Horario h = Horario.Instancia(fechaInicio, fechaFin, listaAsignaturas);
+
         assertEquals(0, h.getTramas().size());
         assertEquals(listaAsignaturas.size(), h.getAsignatura().size());
     }
 
     @Test
     public void horarioTieneAsignaturasDeAlumno() {
+        Horario h = Horario.Instancia(fechaInicio, fechaFin, listaAsignaturas);
+
         when(a.getAsignaturas()).thenReturn(listaAsignaturas);
         assertEquals(a.getAsignaturas(), h.asignatura);
         verify(a).getAsignaturas();
@@ -54,6 +64,8 @@ public class HorarioTest {
 
     @Test
     public void tramasRepartidasVacias() {
+        Horario h = Horario.Instancia(fechaInicio, fechaFin, listaAsignaturas);
+
         l.add(p1);
         l2.add(p2);
         dia.put(0, l);
@@ -64,11 +76,12 @@ public class HorarioTest {
         for (TramaHoraria th : h.getTramas()) {
             assertNull(th.getAsignatura());
         }
-
     }
 
     @Test
     public void asignturaBienAñadidaEnHorario() {
+        Horario h = Horario.Instancia(fechaInicio, fechaFin, listaAsignaturas);
+
         l.add(p1);
         l2.add(p2);
         dia.put(0, l);
@@ -83,7 +96,7 @@ public class HorarioTest {
 
     @Test(expected = HorarioException.class)
     public void errorSiDuracionInvalida() {
-        h = new Horario(fechaInicio, fechaInicio, listaAsignaturas);
+        Horario h = Horario.Instancia(fechaInicio, fechaInicio, listaAsignaturas);
     }
 
 }

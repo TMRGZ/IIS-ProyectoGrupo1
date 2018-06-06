@@ -18,7 +18,7 @@ public class Principal {
 		asig.add(a2);
 		asig.add(a3);
 
-		Horario h = new Horario(a, b, asig);
+		Horario h = Horario.Instancia(a, b, asig);
 
 		Map<Integer, List<Pair<Double, Double>>> dia = new HashMap<>();
 		List<Pair<Double, Double>> l = new ArrayList<>();

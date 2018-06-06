@@ -2,20 +2,20 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-
 public class Horario {
-    public Date inicio;
-    public Date fin;
-    public List<TramaHoraria> tramas = new ArrayList<>();
-    public List<Asignatura> asignatura;
+    private Date inicio;
+    private Date fin;
+    private List<TramaHoraria> tramas = new ArrayList<>();
+    List<Asignatura> asignatura;
+    private static Horario HorarioUnico;
 
-    public Horario(Date inicio, Date fin, List<Asignatura> asignatura) {
+    private Horario(Date inicio, Date fin, List<Asignatura> asignatura) {
         if (inicio.getMonth() >= fin.getMonth() && inicio.getYear() >= fin.getYear() && fin.getDay() - inicio.getDay() < 7) {
             throw new HorarioException("No se puede crear horario de menos de una semana");
         } else {
             this.inicio = inicio;
             this.fin = inicio;
-            asignatura.sort(new Comparator<>() {
+            asignatura.sort(new Comparator<Asignatura>() {
                 public int compare(Asignatura a1, Asignatura a2) {
                     return Integer.compare(a1.getDificultad(), a2.getDificultad());
                 }
@@ -23,6 +23,11 @@ public class Horario {
             Collections.reverse(asignatura);
             this.asignatura = asignatura;
         }
+    }
+
+    public static synchronized Horario Instancia(Date inicio, Date fin, List<Asignatura> asignatura) {
+        if (HorarioUnico == null) HorarioUnico = new Horario(inicio, fin, asignatura);
+        return HorarioUnico;
     }
 
     public void repartirTramas(Map<Integer, List<Pair<Double, Double>>> dia) {
@@ -40,15 +45,18 @@ public class Horario {
         }
     }
 
+
     public void asignarHoras() {
         int hL = horasLibres();
         int dt = totalDificultad();
         double dif;
+
         for (Asignatura a : asignatura) {
             dif = (a.getDificultad() * hL) / dt;
             a.setHoras((int) dif);
         }
     }
+
 
     public void asignacionAsigTrama() {
         int cont = 0;
@@ -60,6 +68,7 @@ public class Horario {
         while (tramasA < horasLibres()) {
             asg = asignatura.get(casig);
             cont = 0;
+
             while (cont < 2 && asg.getHoras() > 0) {
                 tramas.get(ctramas).setAsignatura(asg);
                 cont++;
@@ -79,7 +88,6 @@ public class Horario {
 
                     if (cont == 2) {
                         casig = (casig + 1) % asignatura.size();
-
                     }
                     ctramas++;
                     tramasA++;
@@ -89,15 +97,18 @@ public class Horario {
         }
     }
 
+
     private int horasLibres() {
         return tramas.size();
     }
+
 
     private boolean todasAsig() { //Falso cuando no estan todas asignadas
         int i = 0;
         while (i < asignatura.size() && asignatura.get(i).getHoras() == 0) i++;
         return i == asignatura.size();
     }
+
 
     private int totalDificultad() {
         int n = 0;
@@ -107,16 +118,19 @@ public class Horario {
         return n;
     }
 
+
     public void setAsignatura(List<Asignatura> asignatura) {
         this.asignatura = asignatura;
     }
 
+
     public void mostrarTrama() {
         for (TramaHoraria t : tramas) {
             System.out.println(t.getAsignatura().getNombre());
-            System.out.println("D�a:  " + t.getDia() + " " + t.getHoraInicio());
+            System.out.println("Dia:  " + t.getDia() + " " + t.getHoraInicio());
         }
     }
+
 
     public void mostrarHoras() {
         for (Asignatura t : asignatura) {
@@ -124,11 +138,14 @@ public class Horario {
         }
     }
 
+
     public List<TramaHoraria> getTramas() {
         return tramas;
     }
 
+
     public List<Asignatura> getAsignatura() {
         return asignatura;
     }
+
 }
